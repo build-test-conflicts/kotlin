@@ -5982,6 +5982,11 @@ public class FirBlackBoxCodegenTestGenerated extends AbstractFirBlackBoxCodegenT
             runTest("compiler/testData/codegen/box/coroutines/builderInferenceAndGenericArrayAcessCall.kt");
         }
 
+        @TestMetadata("builderInferenceInsideExtensionFunctionWithWhile.kt")
+        public void testBuilderInferenceInsideExtensionFunctionWithWhile_1_3() throws Exception {
+            runTestWithPackageReplacement("compiler/testData/codegen/box/coroutines/builderInferenceInsideExtensionFunctionWithWhile.kt", "kotlin.coroutines");
+        }
+
         @TestMetadata("captureMutableLocalVariableInsideCoroutineBlock.kt")
         public void testCaptureMutableLocalVariableInsideCoroutineBlock_1_3() throws Exception {
             runTestWithPackageReplacement("compiler/testData/codegen/box/coroutines/captureMutableLocalVariableInsideCoroutineBlock.kt", "kotlin.coroutines");
@@ -11570,6 +11575,11 @@ public class FirBlackBoxCodegenTestGenerated extends AbstractFirBlackBoxCodegenT
         @TestMetadata("capturedStarProjection.kt")
         public void testCapturedStarProjection() throws Exception {
             runTest("compiler/testData/codegen/box/inference/capturedStarProjection.kt");
+        }
+
+        @TestMetadata("coercionToUnitWithLastLambdaExpression.kt")
+        public void testCoercionToUnitWithLastLambdaExpression() throws Exception {
+            runTest("compiler/testData/codegen/box/inference/coercionToUnitWithLastLambdaExpression.kt");
         }
 
         @TestMetadata("coercionToUnitWithNestedLambda.kt")

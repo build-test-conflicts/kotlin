@@ -6047,6 +6047,16 @@ public class LightAnalysisModeTestGenerated extends AbstractLightAnalysisModeTes
             runTest("compiler/testData/codegen/box/coroutines/builderInferenceAndGenericArrayAcessCall.kt");
         }
 
+        @TestMetadata("builderInferenceInsideExtensionFunctionWithWhile.kt")
+        public void testBuilderInferenceInsideExtensionFunctionWithWhile_1_2() throws Exception {
+            runTestWithPackageReplacement("compiler/testData/codegen/box/coroutines/builderInferenceInsideExtensionFunctionWithWhile.kt", "kotlin.coroutines.experimental");
+        }
+
+        @TestMetadata("builderInferenceInsideExtensionFunctionWithWhile.kt")
+        public void testBuilderInferenceInsideExtensionFunctionWithWhile_1_3() throws Exception {
+            runTestWithPackageReplacement("compiler/testData/codegen/box/coroutines/builderInferenceInsideExtensionFunctionWithWhile.kt", "kotlin.coroutines");
+        }
+
         @TestMetadata("captureMutableLocalVariableInsideCoroutineBlock.kt")
         public void testCaptureMutableLocalVariableInsideCoroutineBlock_1_2() throws Exception {
             runTestWithPackageReplacement("compiler/testData/codegen/box/coroutines/captureMutableLocalVariableInsideCoroutineBlock.kt", "kotlin.coroutines.experimental");
@@ -12700,6 +12710,11 @@ public class LightAnalysisModeTestGenerated extends AbstractLightAnalysisModeTes
         @TestMetadata("capturedStarProjection.kt")
         public void testCapturedStarProjection() throws Exception {
             runTest("compiler/testData/codegen/box/inference/capturedStarProjection.kt");
+        }
+
+        @TestMetadata("coercionToUnitWithLastLambdaExpression.kt")
+        public void testCoercionToUnitWithLastLambdaExpression() throws Exception {
+            runTest("compiler/testData/codegen/box/inference/coercionToUnitWithLastLambdaExpression.kt");
         }
 
         @TestMetadata("coercionToUnitWithNestedLambda.kt")
