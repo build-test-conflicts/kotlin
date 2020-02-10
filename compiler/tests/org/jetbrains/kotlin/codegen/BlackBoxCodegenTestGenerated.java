@@ -6047,6 +6047,16 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
             runTest("compiler/testData/codegen/box/coroutines/builderInferenceAndGenericArrayAcessCall.kt");
         }
 
+        @TestMetadata("captureMutableLocalVariableInsideCoroutineBlock.kt")
+        public void testCaptureMutableLocalVariableInsideCoroutineBlock_1_2() throws Exception {
+            runTestWithPackageReplacement("compiler/testData/codegen/box/coroutines/captureMutableLocalVariableInsideCoroutineBlock.kt", "kotlin.coroutines.experimental");
+        }
+
+        @TestMetadata("captureMutableLocalVariableInsideCoroutineBlock.kt")
+        public void testCaptureMutableLocalVariableInsideCoroutineBlock_1_3() throws Exception {
+            runTestWithPackageReplacement("compiler/testData/codegen/box/coroutines/captureMutableLocalVariableInsideCoroutineBlock.kt", "kotlin.coroutines");
+        }
+
         @TestMetadata("capturedVarInSuspendLambda.kt")
         public void testCapturedVarInSuspendLambda_1_2() throws Exception {
             runTestWithPackageReplacement("compiler/testData/codegen/box/coroutines/capturedVarInSuspendLambda.kt", "kotlin.coroutines.experimental");
@@ -12690,6 +12700,11 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
         @TestMetadata("capturedStarProjection.kt")
         public void testCapturedStarProjection() throws Exception {
             runTest("compiler/testData/codegen/box/inference/capturedStarProjection.kt");
+        }
+
+        @TestMetadata("coercionToUnitWithNestedLambda.kt")
+        public void testCoercionToUnitWithNestedLambda() throws Exception {
+            runTest("compiler/testData/codegen/box/inference/coercionToUnitWithNestedLambda.kt");
         }
 
         @TestMetadata("integerLiteralTypeInLamdaReturnType.kt")
