@@ -3,7 +3,7 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-@file:Suppress("SIGNED_CONSTANT_CONVERTED_TO_UNSIGNED")
+@file:Suppress("SIGNED_CONSTANT_CONVERTED_TO_UNSIGNED", "CONSTANT_EXPECTED_TYPE_MISMATCH")
 package test.collections
 
 import test.assertArrayContentEquals
