@@ -288,7 +288,25 @@ private fun KotlinResolutionCandidate.resolveKotlinArgument(
     isReceiver: Boolean
 ) {
     val expectedType = candidateParameter?.let { prepareExpectedType(argument, candidateParameter) }
-    addResolvedKtPrimitive(resolveKtPrimitive(csBuilder, argument, expectedType, this, isReceiver))
+    val convertedArgument = if (expectedType != null) {
+        val convertedConstant = resolutionCallbacks.convertSignedConstantToUnsigned(argument, expectedType)
+        if (convertedConstant != null) {
+            resolvedCall.registerArgumentWithConstantConversion(argument, convertedConstant)
+        }
+
+        convertedConstant
+    } else null
+
+    addResolvedKtPrimitive(
+        resolveKtPrimitive(
+            csBuilder,
+            argument,
+            expectedType,
+            this,
+            isReceiver,
+            convertedArgument?.unknownIntegerType?.unwrap()
+        )
+    )
 }
 
 private fun KotlinResolutionCandidate.prepareExpectedType(

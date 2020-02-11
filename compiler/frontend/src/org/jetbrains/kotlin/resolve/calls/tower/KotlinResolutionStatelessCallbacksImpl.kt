@@ -21,15 +21,19 @@ import org.jetbrains.kotlin.config.AnalysisFlags
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
-import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtSuperExpression
+import org.jetbrains.kotlin.resolve.BindingContext
+import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.DescriptorToSourceUtils
 import org.jetbrains.kotlin.resolve.calls.callResolverUtil.isConventionCall
 import org.jetbrains.kotlin.resolve.calls.callResolverUtil.isInfixCall
 import org.jetbrains.kotlin.resolve.calls.callResolverUtil.isSuperOrDelegatingConstructorCall
 import org.jetbrains.kotlin.resolve.calls.components.KotlinResolutionCallbacks
 import org.jetbrains.kotlin.resolve.calls.components.KotlinResolutionStatelessCallbacks
+import org.jetbrains.kotlin.resolve.calls.context.BasicCallResolutionContext
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemBuilderImpl
 import org.jetbrains.kotlin.resolve.calls.inference.components.ConstraintInjector
 import org.jetbrains.kotlin.resolve.calls.inference.components.SimpleConstraintSystemImpl
@@ -39,13 +43,19 @@ import org.jetbrains.kotlin.resolve.calls.model.KotlinCall
 import org.jetbrains.kotlin.resolve.calls.model.KotlinCallArgument
 import org.jetbrains.kotlin.resolve.calls.model.SimpleKotlinCallArgument
 import org.jetbrains.kotlin.resolve.calls.results.SimpleConstraintSystem
+import org.jetbrains.kotlin.resolve.constants.CompileTimeConstant
+import org.jetbrains.kotlin.resolve.constants.IntegerLiteralTypeConstructor
+import org.jetbrains.kotlin.resolve.constants.IntegerValueTypeConstant
+import org.jetbrains.kotlin.resolve.constants.evaluate.ConstantExpressionEvaluator
 import org.jetbrains.kotlin.resolve.deprecation.DeprecationResolver
-import org.jetbrains.kotlin.types.expressions.ControlStructureTypingUtils
+import org.jetbrains.kotlin.types.KotlinType
+import org.jetbrains.kotlin.types.TypeUtils
+import org.jetbrains.kotlin.types.UnwrappedType
 import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 class KotlinResolutionStatelessCallbacksImpl(
     private val deprecationResolver: DeprecationResolver,
-    private val languageVersionSettings: LanguageVersionSettings
+    private val languageVersionSettings: LanguageVersionSettings,
 ) : KotlinResolutionStatelessCallbacks {
     override fun isDescriptorFromSource(descriptor: CallableDescriptor) =
         DescriptorToSourceUtils.descriptorToDeclaration(descriptor) != null
@@ -61,13 +71,13 @@ class KotlinResolutionStatelessCallbacksImpl(
         kotlinCall is PSIKotlinCallImpl && isSuperOrDelegatingConstructorCall(kotlinCall.psiCall)
 
     override fun isHiddenInResolution(
-        descriptor: DeclarationDescriptor, kotlinCall: KotlinCall, resolutionCallbacks: KotlinResolutionCallbacks
+        descriptor: DeclarationDescriptor, kotlinCall: KotlinCall, resolutionCallbacks: KotlinResolutionCallbacks,
     ) =
         deprecationResolver.isHiddenInResolution(
             descriptor,
             (kotlinCall as? PSIKotlinCall)?.psiCall,
             (resolutionCallbacks as? KotlinResolutionCallbacksImpl)?.trace?.bindingContext,
-            isSuperOrDelegatingConstructorCall(kotlinCall)
+            isSuperOrDelegatingConstructorCall(kotlinCall),
         )
 
     override fun isSuperExpression(receiver: SimpleKotlinCallArgument?): Boolean =
@@ -84,13 +94,13 @@ class KotlinResolutionStatelessCallbacksImpl(
 
     override fun isApplicableCallForBuilderInference(
         descriptor: CallableDescriptor,
-        languageVersionSettings: LanguageVersionSettings
+        languageVersionSettings: LanguageVersionSettings,
     ): Boolean {
         return org.jetbrains.kotlin.resolve.calls.inference.isApplicableCallForBuilderInference(descriptor, languageVersionSettings)
     }
 
     override fun createConstraintSystemForOverloadResolution(
-        constraintInjector: ConstraintInjector, builtIns: KotlinBuiltIns
+        constraintInjector: ConstraintInjector, builtIns: KotlinBuiltIns,
     ): SimpleConstraintSystem {
         return if (languageVersionSettings.getFlag(AnalysisFlags.constraintSystemForOverloadResolution).forNewInference())
             SimpleConstraintSystemImpl(constraintInjector, builtIns)
